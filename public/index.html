@@ -25,23 +25,21 @@
         Enter
       </button>
     </div>
-
+    <div class="flex gap-2">
+      <input
+        id="message"
+        class="rounded-md bg-white border-none px-1 text-slate-600"
+      /><button
+        onclick="sendMessage()"
+        class="rounded-sm bg-slate-900 border-none px-1"
+      >
+        Send
+      </button>
+    </div>
     <div
       id="room"
       class="hidden flex flex-col items-start p-4 gap-2 rounded-md w-[450px] m-auto bg-slate-600 text-white"
-    >
-      <div class="flex gap-2">
-        <input
-          id="message"
-          class="rounded-md bg-white border-none px-1 text-slate-600"
-        /><button
-          onclick="sendMessage()"
-          class="rounded-sm bg-slate-900 border-none px-1"
-        >
-          Send
-        </button>
-      </div>
-    </div>
+    ></div>
 
     <script>
       const socket = io("/");
@@ -69,6 +67,7 @@
       function sendMessage() {
         let message = document.getElementById("message");
         socket.emit("message", message.value);
+        if (message.value.trim().length < 3) alert("3 herfden az mesaj yazma!");
         document.getElementById(
           "room"
         ).innerHTML += `<div class="w-full pb-1 border-b-2 border-slate-800">${nickName}: ${message.value}</div>`;
