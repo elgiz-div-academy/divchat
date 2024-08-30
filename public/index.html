@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Socket.IO Tutorials</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="/socket.io/socket.io.js"></script>
+  </head>
+  <body class="flex items-center justify-center h-[100vh]">
+    <div
+      id="auth"
+      class="flex flex-col items-start p-4 gap-2 rounded-md w-[450px] h-[200px] m-auto bg-slate-600 text-white"
+    >
+      <div class="">Nikcname daxil edin</div>
+      <input
+        class="rounded-md bg-white border-none px-1 text-slate-600"
+        id="nickName"
+        placeholder="John Doe"
+      />
+      <button
+        onclick="logIn()"
+        class="rounded-md w-12 p-1 border-none bg-slate-700"
+      >
+        Enter
+      </button>
+    </div>
+
+    <div
+      id="room"
+      class="hidden flex flex-col items-start p-4 gap-2 rounded-md w-[450px] m-auto bg-slate-600 text-white"
+    >
+      <div class="flex gap-2">
+        <input
+          id="message"
+          class="rounded-md bg-white border-none px-1 text-slate-600"
+        /><button
+          onclick="sendMessage()"
+          class="rounded-sm bg-slate-900 border-none px-1"
+        >
+          Send
+        </button>
+      </div>
+    </div>
+
+    <script>
+      const socket = io("/");
+      let nickName = "";
+      socket.on("connect", () => {
+        console.log("Connection is successfull");
+      });
+
+      socket.on("new-message", (data) => {
+        let content = `<b>${data.nickName}</b>: ${data.message}`;
+        document.getElementById(
+          "room"
+        ).innerHTML += `<div class="w-full pb-1 border-b-2 border-slate-800">${content}</div>`;
+      });
+
+      function logIn() {
+        nickName = document.getElementById("nickName").value;
+        if (nickName?.length < 2) alert("Nickname 2 simvoldan cox olmalidir");
+        socket.emit("auth", nickName);
+
+        document.getElementById("auth").style.display = "none";
+        document.getElementById("room").classList.remove("hidden");
+      }
+
+      function sendMessage() {
+        let message = document.getElementById("message");
+        socket.emit("message", message.value);
+        document.getElementById(
+          "room"
+        ).innerHTML += `<div class="w-full pb-1 border-b-2 border-slate-800">${nickName}: ${message.value}</div>`;
+
+        message.value = "";
+      }
+    </script>
+  </body>
+</html>
