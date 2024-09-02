@@ -57,7 +57,8 @@
 
       function logIn() {
         nickName = document.getElementById("nickName").value;
-        if (nickName?.length < 2) alert("Nickname 2 simvoldan cox olmalidir");
+        if (nickName?.length < 2)
+          return alert("Nickname 2 simvoldan cox olmalidir");
         socket.emit("auth", nickName);
 
         document.getElementById("auth").style.display = "none";
